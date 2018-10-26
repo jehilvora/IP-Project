@@ -19,6 +19,16 @@ def home():
 	else:
 		return render_template('login.html')
 
+@app.route("/signUpHandler", methods=['GET', 'POST'])
+def signUpHandler():
+	#Add a new User to the database. Currently storing passwords as plain-text. Will substitute for sha1.
+	userName = request.form['uname']
+	psw = request.form['psw']
+	cursor = db.cursor()
+	cursor.execute("insert into users values ('%s','%s')" % (userName, psw))
+	db.commit()
+	return redirect(url_for('home'))
+
 @app.route('/loginHandler', methods=['GET', 'POST'])
 def loginHandler():
 	#Login Database format
@@ -39,7 +49,7 @@ def loginHandler():
 			session['logged_in'] = True
 			return redirect(url_for('homePage'))
 	else:
-		return "<h2>Invalid Username or Password</h2>"
+		return render_template('login.html', error=True)
 
 @app.route("/homepage", methods=['GET'])
 def homePage():
