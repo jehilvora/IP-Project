@@ -22,9 +22,9 @@
 
     <label for="psw"><b>Password</b></label>
     <input type="password" placeholder="Enter Password" name="psw" required>
-    {% if error %}
+    {% if messages %}
     <div class="container">
-      <p style="color: red;">Wrong username or pasword</p>
+      <p style="color: red;">{{messages}}</p>
     </div>
     {%endif%}
     {% if request.args.get('sign_up') == "1" %}

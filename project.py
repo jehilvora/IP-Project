@@ -13,11 +13,12 @@ db = MySQLdb.connect('localhost', 'root', 'root@123', 'online_judge')
 # Route for handling login page
 @app.route("/", methods=['GET'])
 def home():
+	messages = request.args.get('messages')
 	#logged_in is the key in session variable for current login status
 	if session.get("logged_in"):
 		return redirect(url_for('homePage'))
 	else:
-		return render_template('login.html')
+		return render_template('login.html', messages = messages)
 
 @app.route("/signUpHandler", methods=['GET', 'POST'])
 def signUpHandler():
@@ -25,9 +26,17 @@ def signUpHandler():
 	userName = request.form['uname']
 	psw = request.form['psw']
 	cursor = db.cursor()
-	cursor.execute("insert into users values ('%s','%s')" % (userName, psw))
-	db.commit()
-	return redirect(url_for('home'))
+	# Retrieve all users
+	userData = getAllValues("select register_no from users")
+	userData = [x[0] for x in userData]
+	messages = None
+	# Check for new user in current users
+	if userName not in userData:
+		cursor.execute("insert into users values ('%s','%s')" % (userName, psw))
+		db.commit()
+	else:
+		messages = "User already exists"
+	return redirect(url_for('home', messages = messages))
 
 @app.route('/loginHandler', methods=['GET', 'POST'])
 def loginHandler():
@@ -49,7 +58,7 @@ def loginHandler():
 			session['logged_in'] = True
 			return redirect(url_for('homePage'))
 	else:
-		return render_template('login.html', error=True)
+		return render_template('login.html', messages="Wrong username or password")
 
 @app.route("/homepage", methods=['GET'])
 def homePage():
@@ -70,6 +79,15 @@ def getSingleValue(query):
 	cursor = db.cursor()
 	cursor.execute(query)
 	return cursor.fetchone()
+
+def getAllValues(query):
+	"""
+		Returns a single tuple of data from database
+		query : a mysql query for information
+	"""
+	cursor = db.cursor()
+	cursor.execute(query)
+	return cursor.fetchall()
 
 if __name__ == "__main__":
 	app.run(debug=True)
