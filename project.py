@@ -16,7 +16,7 @@ def home():
 	messages = request.args.get('messages')
 	#logged_in is the key in session variable for current login status
 	if session.get("logged_in"):
-		return redirect(url_for('homePage'))
+		return redirect(url_for('dashboard'))
 	else:
 		return render_template('login.html', messages = messages)
 
@@ -56,13 +56,13 @@ def loginHandler():
 	if reqPsw != None and psw == reqPsw[0]:
 			session['username'] = userName
 			session['logged_in'] = True
-			return redirect(url_for('homePage'))
+			return redirect(url_for('dashboard'))
 	else:
 		return render_template('login.html', messages="Wrong username or password")
 
-@app.route("/homepage", methods=['GET'])
-def homePage():
-	return render_template("homepage.html")
+@app.route("/dashboard", methods=['GET'])
+def dashboard():
+	return render_template("dashboard.html")
 
 @app.route("/logout", methods=['GET', 'POST'])
 def logout():
