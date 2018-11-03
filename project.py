@@ -22,7 +22,7 @@ def home():
 
 @app.route("/signUpHandler", methods=['GET', 'POST'])
 def signUpHandler():
-	#Add a new User to the database. Currently storing passwords as plain-text. Will substitute for sha1.
+	#Add a new User to the database. Currently storing passwords as plain-text. Will substitute for sha256.
 	userName = request.form['uname']
 	psw = request.form['psw']
 	cursor = db.cursor()
@@ -40,16 +40,6 @@ def signUpHandler():
 
 @app.route('/loginHandler', methods=['GET', 'POST'])
 def loginHandler():
-	#Login Database format
-	#
-	#+-------------+--------------+------+-----+---------+-------+
-	#| Field       | Type         | Null | Key | Default | Extra |
-	#+-------------+--------------+------+-----+---------+-------+
-	#| register_no | varchar(10)  | NO   | PRI | NULL    |       |
-	#| password    | varchar(256) | YES  |     | NULL    |       |
-	#+-------------+--------------+------+-----+---------+-------+
-
-	# Yet to add user addition functionality
 	userName = request.form['uname']
 	psw = request.form['psw']
 	reqPsw = getSingleValue("select password from users where register_no = '%s'" % userName)
@@ -63,6 +53,19 @@ def loginHandler():
 @app.route("/dashboard", methods=['GET'])
 def dashboard():
 	return render_template("dashboard.html")
+
+@app.route("/problems/<category>", methods=['GET'])
+def problems(category):
+	# Get all problems under given category
+	problems = getAllValues("select problem_name from problem where category_name = '%s'" % category)
+	return render_template("problems.html", problems = problems)
+
+@app.route("/singleProblem/<problem_name>")
+def singleProblem(problem_name):
+	# Get information for single problem
+	problemInfo = getSingleValue("select * from problem where problem_name = '%s'" % problem_name)
+	return render_template("singleProblem.html", problemInfo = problemInfo)
+
 
 @app.route("/logout", methods=['GET', 'POST'])
 def logout():
