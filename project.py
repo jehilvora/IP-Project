@@ -8,7 +8,25 @@ app = Flask(__name__)
 app.secret_key = os.urandom(12)
 
 #Database connection to database name 'online_judge'. Ensure user and password is same
-db = MySQLdb.connect('localhost', 'root', 'root@123', 'online_judge')
+db = MySQLdb.connect('localhost', 'root', 'root123', 'online_judge')
+
+@app.route("/saveAndEvaluate/<int:problem_id>",methods=['GET','POST'])
+def saveAndEvaluate(problem_id):
+	cursor = db.cursor()
+	code = request.form['code']
+	cursor.execute("insert into submission values(0,'C','WA','','%s',%d) " % (session['username'],problem_id))
+	sub_id=cursor.execute("select LAST_INSERT_ID()")
+	filePath="./static/submissions/%s" % (session['username'])
+	if not os.path.exists(filePath):
+		os.makedirs(filePath)
+	codeFile = open(filePath+'/%d.c' % (int(sub_id)),"w+")
+	codeFile.write(code)
+	codeFile.close()
+	return code
+
+@app.route("/editor/<int:problem_id>",methods=['GET','POST'])
+def editor(problem_id):
+	return render_template('Editor1.html',pid=problem_id)
 
 # Route for handling login page
 @app.route("/", methods=['GET'])
