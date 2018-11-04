@@ -1,9 +1,15 @@
+
 <h1>{{ problemInfo[4] }}</h1>
+{% extends "dashboard.html" %}
+{% block body %}
+<h1>{{ problemInfo[0] }}</h1>
 <pre>
 	{{problemInfo[1]}}
 </pre>
 <h3>Input:</h3>
 <pre>
 	{{problemInfo[2]}}
-</pre>
+</pre> 
 <a href="/editor/{{problemInfo[0]}}">solve</a>	
+{% endblock %}
+	}

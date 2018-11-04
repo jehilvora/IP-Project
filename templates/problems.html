@@ -1,5 +1,8 @@
+{% extends "dashboard.html" %}
+{% block body %}
 <ol>
 	{% for problem in problems: %}
 	<a href="/singleProblem/{{problem[0]}}"><li>{{problem[0]}}</li></a>
 	{% endfor %}
 </ol>
+{% endblock %}
