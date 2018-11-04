@@ -1,3 +1,5 @@
+{% extends "dashboard.html" %}
+{% block body %}
 <h1>{{ problemInfo[0] }}</h1>
 <pre>
 	{{problemInfo[1]}}
@@ -6,4 +8,5 @@
 <pre>
 	{{problemInfo[2]}}
 </pre>
-	
+{% endblock %}
+	}
