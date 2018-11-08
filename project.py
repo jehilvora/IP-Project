@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, session
 import os
+import subprocess
 import MySQLdb
 
 #App initialization
@@ -15,13 +16,17 @@ def saveAndEvaluate(problem_id):
 	cursor = db.cursor()
 	code = request.form['code']
 	cursor.execute("insert into submission values(0,'C','WA','','%s',%d) " % (session['username'],problem_id))
-	sub_id=cursor.execute("select LAST_INSERT_ID()")
+	sub_id=int(cursor.execute("select LAST_INSERT_ID()"))
 	filePath="./static/submissions/%s" % (session['username'])
 	if not os.path.exists(filePath):
 		os.makedirs(filePath)
-	codeFile = open(filePath+'/%d.c' % (int(sub_id)),"w+")
+	codeFile = open(filePath+'/%d.c' % ((sub_id)),"w+")
 	codeFile.write(code)
 	codeFile.close()
+	os.chdir(filePath)
+	subprocess.call(["gcc","1.c"])
+	subprocess.call("a")
+	os.chdir("C:\IP-Project")
 	return code
 
 @app.route("/editor/<int:problem_id>",methods=['GET','POST'])
