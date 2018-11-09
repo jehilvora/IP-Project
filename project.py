@@ -25,9 +25,9 @@ def saveAndEvaluate(problem_id):
 	codeFile.close()
 	os.chdir(filePath)
 	subprocess.call(["gcc","1.c"])
-	subprocess.call("a")
+	s=subprocess.check_output("a")
 	os.chdir("C:\IP-Project")
-	return code
+	return s
 
 @app.route("/editor/<int:problem_id>",methods=['GET','POST'])
 def editor(problem_id):
