@@ -9,17 +9,16 @@ app = Flask(__name__)
 app.secret_key = os.urandom(12)
 
 #Database connection to database name 'online_judge'. Ensure user and password is same
-db = MySQLdb.connect('localhost', 'root', 'root123', 'online_judge')
+db = MySQLdb.connect('localhost', 'root', 'root@123', 'online_judge')
 
 @app.route("/saveAndEvaluate/<int:problem_id>",methods=['GET','POST'])
 def saveAndEvaluate(problem_id):
 	cursor = db.cursor()
 	code = request.form['code']
 	cursor.execute("insert into submission(Language,Status,file_path,register_no,problem_id) values('C','WA','','%s',%d) " % (session['username'],problem_id))
+	sub_id = getSingleValue("select max(sub_id) from submission")[0]
 	db.commit()
-	sub_id=cursor.execute("select max(sub_id) from submission")
-	print(sub_id)
-	db.commit()
+	sub_id = int(sub_id)
 	filePath="./static/submissions/%s" % (session['username'])
 	if not os.path.exists(filePath):
 		os.makedirs(filePath)
@@ -27,7 +26,7 @@ def saveAndEvaluate(problem_id):
 	codeFile.write(code)
 	codeFile.close()
 	os.chdir(filePath)
-	status=subprocess.call(["gcc","%d.c" % (sub_id)])
+	status=subprocess.call("gcc %d.c -o %d" % (sub_id,sub_id),shell=True)
 	if status:
 		os.chdir("C:\IP-Project")
 		return "error"
