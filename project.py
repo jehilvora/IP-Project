@@ -17,6 +17,8 @@ def saveAndEvaluate(problem_id):
 	code = request.form['code']
 	cursor.execute("insert into submission values(0,'C','WA','','%s',%d) " % (session['username'],problem_id))
 	sub_id=int(cursor.execute("select LAST_INSERT_ID()"))
+	print(sub_id)
+	db.commit()
 	filePath="./static/submissions/%s" % (session['username'])
 	if not os.path.exists(filePath):
 		os.makedirs(filePath)
@@ -24,7 +26,10 @@ def saveAndEvaluate(problem_id):
 	codeFile.write(code)
 	codeFile.close()
 	os.chdir(filePath)
-	subprocess.call(["gcc","1.c"])
+	status=subprocess.call(["gcc","1.c"])
+	if status:
+		os.chdir("C:\IP-Project")
+		return "error"
 	s=subprocess.check_output("a")
 	os.chdir("C:\IP-Project")
 	return s
