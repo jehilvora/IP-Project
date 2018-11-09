@@ -15,7 +15,8 @@ db = MySQLdb.connect('localhost', 'root', 'root123', 'online_judge')
 def saveAndEvaluate(problem_id):
 	cursor = db.cursor()
 	code = request.form['code']
-	cursor.execute("insert into submission values(0,'C','WA','','%s',%d) " % (session['username'],problem_id))
+	cursor.execute("insert into submission(Language,Status,file_path,register_no,problem_id) values('C','WA','','%s',%d) " % (session['username'],problem_id))
+	db.commit()
 	sub_id=cursor.execute("select max(sub_id) from submission")
 	print(sub_id)
 	db.commit()
