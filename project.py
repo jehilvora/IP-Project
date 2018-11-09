@@ -17,8 +17,8 @@ def saveAndEvaluate(problem_id):
 	code = request.form['code']
 	cursor.execute("insert into submission(Language,Status,file_path,register_no,problem_id) values('C','WA','','%s',%d) " % (session['username'],problem_id))
 	db.commit()
-	sub_id=cursor.execute("select max(sub_id) from submission")
-	print(sub_id)
+	sub_id=getSingleValue("select max(sub_id) from submission")[0]
+	sub_id=int(sub_id)
 	db.commit()
 	filePath="./static/submissions/%s" % (session['username'])
 	if not os.path.exists(filePath):
@@ -27,7 +27,7 @@ def saveAndEvaluate(problem_id):
 	codeFile.write(code)
 	codeFile.close()
 	os.chdir(filePath)
-	status=subprocess.call(["gcc","%d.c" % (sub_id)])
+	status=subprocess.call("gcc %d.c -o %d" % (sub_id,sub_id),shell=True)
 	if status:
 		os.chdir("C:\IP-Project")
 		return "error"
