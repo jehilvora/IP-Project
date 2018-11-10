@@ -48,6 +48,14 @@ def home():
 	else:
 		return render_template('login.html', messages = messages)
 
+@app.route("/profile", methods=['GET'])
+def profile():
+	return render_template("profile.html")
+
+@app.route("/about", methods=['GET'])
+def about():
+	return render_template("about.html")
+
 @app.route("/signUpHandler", methods=['GET', 'POST'])
 def signUpHandler():
 	#Add a new User to the database. Currently storing passwords as plain-text. Will substitute for sha256.

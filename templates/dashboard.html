@@ -3,8 +3,8 @@
 <head>
 	<title>{% block title %} Online Judge UVCE {% endblock %}</title>
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/dashboard.css') }}">
-	{% block head %}
 	<script type="text/javascript" src="{{ url_for('static',filename='js/navbar.js') }}"></script>
+	{% block head %}
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/slideshow.css') }}">
 	{% endblock %}
 </head>
@@ -15,14 +15,14 @@
 		<div class="overlay-content">
 			<a href="/dashboard">Home</a>
 			<a href="/problems/None">Lab</a>
-			<a href="#">Placement</a>
-			<a href="#">Profile-{{ session['username'] }}</a>
-			<a href="#">About</a>
+			<a href="/problems/Placement">Placement</a>
+			<a href="/profile">Profile-{{ session['username'] }}</a>
+			<a href="/about">About</a>
 			<a href="/logout">Logout</a>
 		</div>
 	</div>
 
-	<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+	<span style="padding:10px; font-size:40px;cursor:pointer" onclick="openNav()">&#9776;</span>
 	
 	<div style="text-align: center;">
 		<h1>Online Judge UVCE</h1>
