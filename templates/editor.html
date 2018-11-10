@@ -1,0 +1,30 @@
+{% extends "dashboard.html" %}
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/editor.css') }}">
+{% endblock %}
+{% block body %}
+<div id="editor">
+int main()
+{
+    printf("Hello World!");
+    return 0;
+}
+</div>
+
+<form method="post" action="/saveAndEvaluate/{{ pid }}" id="myForm">
+    <input name="code" type="text" hidden id="editortext">
+    <input type="submit" value="Submit" id="submit">
+</form>
+
+
+<script src="{{ url_for('static',filename='src-noconflict/ace.js') }}" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/javascript");
+
+    document.getElementById("myForm").onsubmit = function(evt) {
+      document.getElementById("editortext").value = editor.getValue();
+  }
+</script>
+{% endblock %}
