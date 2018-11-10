@@ -8,7 +8,7 @@
         height: 600px;
     }
 
-#submit {
-    float: right;
+form {
+    text-align: center; 
     padding: 10px;
 }
