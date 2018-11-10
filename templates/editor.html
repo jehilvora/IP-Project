@@ -4,11 +4,13 @@
 {% endblock %}
 {% block body %}
 <div id="editor">
+<pre>
 int main()
 {
     printf("Hello World!");
     return 0;
 }
+</pre>
 </div>
 
 <form method="post" action="/saveAndEvaluate/{{ pid }}" id="myForm">
