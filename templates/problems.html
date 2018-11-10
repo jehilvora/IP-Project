@@ -1,8 +1,29 @@
 {% extends "dashboard.html" %}
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/problems.css') }}">
+{% endblock %}
 {% block body %}
-<ol>
-	{% for problem in problems: %}
+<!--	{% for problem in problems: %}
 	<a href="/singleProblem/{{problem[0]}}"><li>{{problem[0]}}</li></a>
-	{% endfor %}
-</ol>
+	{% endfor %} -->
+	<table>
+  	<tr>
+    	<th>Problem Name</th>
+    	<th>Status</th>
+    	<th>No.Of Submissions</th>
+    	<th>Accuracy</th>
+  	</tr>
+  	<tr>
+  		{% for x in range(len): %}
+    	<td><a href="/singleProblem/{{problem[x][0]}}">{{problem[x][0]}}</a></td>
+    	{% if status[x]=="True": %}
+    	<td><p>&#9989</p></td>
+    	{% else: %}
+    	<td><p>&#10060</p></td>
+    	{% endif %}
+    	<td>{{ sub[x] }}</td>
+    	<td>{{ acc[x] }}</td>
+    	{% endfor %}
+	</tr>
+	</table>
 {% endblock %}

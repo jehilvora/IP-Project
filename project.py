@@ -15,7 +15,7 @@ db = MySQLdb.connect('localhost', 'root', 'root123', 'online_judge')
 def saveAndEvaluate(problem_id):
 	cursor = db.cursor()
 	code = request.form['code']
-	cursor.execute("insert into submission(Language,Status,file_path,register_no,problem_id) values('C','WA','','%s',%d) " % (session['username'],problem_id))
+	cursor.execute("insert into submission values(0,'C','WA','','%s',%d) " % (session['username'],problem_id))
 	sub_id = getSingleValue("select max(sub_id) from submission")[0]
 	db.commit()
 	sub_id = int(sub_id)
@@ -29,10 +29,18 @@ def saveAndEvaluate(problem_id):
 	status=subprocess.call("gcc %d.c -o %d" % (sub_id,sub_id),shell=True)
 	if status:
 		os.chdir("C:\IP-Project")
-		return "error"
-	s=subprocess.check_output("a")
+		return "compilation error"
+	output=subprocess.check_output("%d" % sub_id)
+	os.chdir("C:\IP-Project\static\problems")
+	subprocess.call("gcc %d.c -o %d" % (problem_id,problem_id),shell=True)
+	expected_output=subprocess.check_output("%d" % problem_id)
+	if output!=expected_output:
+		os.chdir("C:\IP-Project")		
+		return "Wrong Output"	
+	cursor.execute("update submission set Status='AC' where problem_id=%d and register_no='%s' and sub_id=%d" % (problem_id,session['username'],sub_id))
+	db.commit()
 	os.chdir("C:\IP-Project")
-	return s
+	return "Successful Submission"
 
 @app.route("/editor/<int:problem_id>",methods=['GET','POST'])
 def editor(problem_id):
@@ -94,7 +102,24 @@ def dashboard():
 def problems(category):
 	# Get all problems under given category
 	problems = getAllValues("select problem_name from problem where category_name = '%s'" % category)
-	return render_template("problems.html", problems = problems)
+	problem_submissions = getAllValues("select count(*) from submission group by problem_id")
+	correct_submissions = getAllValues("select count(*) from submission where Status = 'AC' group by problem_id")
+	accuracy = []
+	problem_submissions = [x[0] for x in problem_submissions]
+	correct_submissions = [x[0] for x in correct_submissions]
+	for x,y in zip(problem_submissions,correct_submissions):
+		accuracy.append("%.2f" % round((y*100)/x,2))
+	length=len(problem_submissions)
+	print(length)
+	get_status=getAllValues("select count(*) from submission where Status = 'AC' and register_no = %s group by problem_id" % session['username'])
+	get_status = [x[0] for x in get_status]
+	status = []
+	for a in get_status:
+		if a>0:
+			status.append("True")
+		else:
+			status.append("False")
+	return render_template("problems.html", problem = problems , acc = accuracy , sub = problem_submissions , status = status , len = length)
 
 @app.route("/singleProblem/<problem_name>")
 def singleProblem(problem_name):
