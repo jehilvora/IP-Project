@@ -108,7 +108,7 @@ def problems(category):
 	problem_submissions = [x[0] for x in problem_submissions]
 	correct_submissions = [x[0] for x in correct_submissions]
 	for x,y in zip(problem_submissions,correct_submissions):
-		accuracy.append("%.2f" % round((y*100)/x,2))
+		accuracy.append("%.2f" % ((y*100)/x))
 	length=len(problem_submissions)
 	print(length)
 	get_status=getAllValues("select count(*) from submission where Status = 'AC' and register_no = %s group by problem_id" % session['username'])
