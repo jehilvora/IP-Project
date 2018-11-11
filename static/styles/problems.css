@@ -10,9 +10,20 @@ th, td {
 
 tr{
 	background-color: #1F618D;
+	color: white;
 }
 
 th {
     background-color: #154360;
     color: white;
+}
+
+a.problem:link, a.problem:visited {
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+}
+
+a.problem:hover {
+	font-size: 120%;
 }

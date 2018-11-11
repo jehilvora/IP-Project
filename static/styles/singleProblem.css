@@ -1,0 +1,21 @@
+a.singleProblem:link, a.singleProblem:visited {
+    background-color: grey;
+    border: 2px solid green;
+   	border-radius: 10px;
+   	font-weight: 600;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+a.singleProblem:hover, a.singleProblem:active {
+    background-color: green;
+    color: white;
+}
+
+a.singleProblem:link, a.singleProblem:visited {
+    color: black;
+    text-decoration: none;
+    display: inline-block;
+}

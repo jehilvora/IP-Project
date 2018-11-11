@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(12)
 
 #Database connection to database name 'online_judge'. Ensure user and password is same
-db = MySQLdb.connect('localhost', 'root', 'root@123', 'online_judge')
+db = MySQLdb.connect('localhost', 'root', 'root123', 'online_judge')
 
 @app.route("/saveAndEvaluate/<int:problem_id>",methods=['GET','POST'])
 def saveAndEvaluate(problem_id):
@@ -44,7 +44,15 @@ def saveAndEvaluate(problem_id):
 
 @app.route("/editor/<int:problem_id>",methods=['GET','POST'])
 def editor(problem_id):
-	return render_template('editor.html',pid=problem_id)
+	sub_id = request.args.get('sub_id')
+	filePath="./static/submissions/%s/%s.c" % (session['username'],sub_id)
+	code = ""
+	#os.chdir(filePath)
+	if os.path.exists(filePath):
+		codeFile = open(filePath,"r")
+		code = codeFile.read()
+		codeFile.close()
+	return render_template('editor.html', pid=problem_id , code = code)
 
 # Route for handling login page
 @app.route("/", methods=['GET'])
@@ -100,37 +108,33 @@ def dashboard():
 
 @app.route("/problems/<category>", methods=['GET'])
 def problems(category):
-	# Get all problems under given category
-	problems = getAllValues("select problem_name from problem where category_name = '%s'" % category)
-	problem_submissions = getAllValues("select count(*) from submission group by problem_id")
-	correct_submissions = getAllValues("select count(*) from submission where Status = 'AC' group by problem_id")
-	accuracy = []
-	problem_submissions = [x[0] for x in problem_submissions]
-	correct_submissions = [x[0] for x in correct_submissions]
-	for x,y in zip(problem_submissions,correct_submissions):
-		accuracy.append("%.2f" % ((y*100)/x))
-	length=len(problem_submissions)
-	print(length)
-	get_status=getAllValues("select count(*) from submission where Status = 'AC' and register_no = %s group by problem_id" % session['username'])
-	get_status = [x[0] for x in get_status]
-	status = []
-	for a in get_status:
-		if a>0:
-			status.append("True")
-		else:
-			status.append("False")
-	return render_template("problems.html", problem = problems , acc = accuracy , sub = problem_submissions , status = status , len = length)
+	problem_data = getAllValues("select problem_name,p.problem_id,sum(case when Status != 'NULL' then 1 else 0 end) allsubs,sum(case when Status = 'AC' then 1 else 0 end) success from problem as p LEFT JOIN submission as s on s.problem_id=p.problem_id group by s.problem_id order by p.problem_id")
+	return render_template("problems.html", problem = problem_data)
 
 @app.route("/singleProblem/<problem_name>")
 def singleProblem(problem_name):
 	# Get information for single problem
 	problemInfo = getSingleValue("select * from problem where problem_name = '%s'" % problem_name)
-	return render_template("singleProblem.html", problemInfo = problemInfo)
+	get_status = getSingleValue("select count(*) from submission as s,problem as p where problem_name = '%s' and p.problem_id=s.problem_id and Status='AC' and register_no='%s' " % (problem_name,session['username']))
+	if get_status[0]>0:
+		status="True"
+	else:
+		status="False"
+	return render_template("singleProblem.html", problemInfo = problemInfo , status = status)
 
+@app.route("/singleProblem/<problem_name>/mySubmissions")
+def mySubmissions(problem_name):
+	submissions=getAllValues("select sub_id,Status,register_no,s.problem_id,problem_name from submission as s,problem as p where s.problem_id = p.problem_id and problem_name = '%s' and register_no = '%s'" % (problem_name,session['username']))
+	return render_template("mySubmissions.html", submissions = submissions , problem_name = problem_name)
+
+@app.route("/singleProblem/<problem_name>/allSubmissions")
+def allSubmissions(problem_name):
+	submissions=getAllValues("select sub_id,Status,register_no,s.problem_id,problem_name from submission as s,problem as p where s.problem_id = p.problem_id and problem_name = '%s'" % (problem_name))
+	return render_template("allSubmissions.html", submissions = submissions)
 
 @app.route("/logout", methods=['GET', 'POST'])
 def logout():
-	#set logged_in to false to remove user from session
+	#set logged_in to false to remove user from sessioname
 	session.clear()
 	return redirect(url_for('home'))
 

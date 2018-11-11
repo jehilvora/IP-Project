@@ -13,17 +13,21 @@
     	<th>No.Of Submissions</th>
     	<th>Accuracy</th>
   	</tr>
+  	{% for x in problem %}
   	<tr>
-  		{% for x in range(len): %}
-    	<td><a href="/singleProblem/{{problem[x][0]}}">{{problem[x][0]}}</a></td>
-    	{% if status[x]=="True": %}
+  	 	<td><span style="cursor:pointer"><a class="problem" href="/singleProblem/{{x[0]}}">{{x[0]}}</a></span></td>
+    	{% if x[3]>0: %}
     	<td><p>&#9989</p></td>
     	{% else: %}
     	<td><p>&#10060</p></td>
     	{% endif %}
-    	<td>{{ sub[x] }}</td>
-    	<td>{{ acc[x] }}</td>
-    	{% endfor %}
+    	<td>{{ x[2] }}</td>
+    	{% if x[2]!=0: %}
+    	<td>{{ "%.2f" % ((x[3]*100)/x[2]) }}</td>
+    	{% else: %}
+    	<td>0.00</td>
+    	{% endif %}
 	</tr>
+    {% endfor %}
 	</table>
 {% endblock %}

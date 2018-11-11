@@ -5,11 +5,15 @@
 {% block body %}
 <div id="editor">
 <pre>
+{% if code == "": %}    
 int main()
 {
     printf("Hello World!");
     return 0;
 }
+{% else: %}
+{{code}}
+{% endif %}
 </pre>
 </div>
 
@@ -24,7 +28,6 @@ int main()
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/php");
-
     document.getElementById("myForm").onsubmit = function(evt) {
       document.getElementById("editortext").value = editor.getValue();
   }

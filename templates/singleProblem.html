@@ -1,6 +1,9 @@
-
-
 {% extends "dashboard.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/singleProblem.css') }}">
+{% endblock %}
+
 {% block body %}
 <h1>{{ problemInfo[4] }}</h1>
 <pre>
@@ -10,6 +13,10 @@
 <pre>
 	{{problemInfo[2]}}
 </pre> 
-<a href="/editor/{{problemInfo[0]}}">solve</a>	
+<a class="singleProblem" href="/editor/{{problemInfo[0]}}">Solve</a>
+<a class="singleProblem" href="/singleProblem/{{problemInfo[4]}}/mySubmissions">My Submissions</a>
+{% if status=="True": %}
+<a class="singleProblem" href="/singleProblem/{{problemInfo[4]}}/allSubmissions">All Submissions</a>
+{% endif %}	
 {% endblock %}
 	}
