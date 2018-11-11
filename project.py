@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(12)
 
 #Database connection to database name 'online_judge'. Ensure user and password is same
-db = MySQLdb.connect('localhost', 'root', 'root123', 'online_judge')
+db = MySQLdb.connect('localhost', 'root', 'root@123', 'online_judge')
 
 @app.route("/saveAndEvaluate/<int:problem_id>",methods=['GET','POST'])
 def saveAndEvaluate(problem_id):
@@ -30,10 +30,10 @@ def saveAndEvaluate(problem_id):
 	if status:
 		os.chdir("C:\IP-Project")
 		return "compilation error"
-	output=subprocess.check_output("%d" % sub_id)
+	output=subprocess.check_output("%d.exe < C:\IP-Project\static\problems\%d.txt" % (sub_id,problem_id), shell=True)
 	os.chdir("C:\IP-Project\static\problems")
 	subprocess.call("gcc %d.c -o %d" % (problem_id,problem_id),shell=True)
-	expected_output=subprocess.check_output("%d" % problem_id)
+	expected_output=subprocess.check_output("%d.exe < C:\IP-Project\static\problems\%d.txt" % (problem_id, problem_id), shell=True)
 	if output!=expected_output:
 		os.chdir("C:\IP-Project")		
 		return "Wrong Output"	
@@ -47,7 +47,6 @@ def editor(problem_id):
 	sub_id = request.args.get('sub_id')
 	filePath="./static/submissions/%s/%s.c" % (session['username'],sub_id)
 	code = ""
-	#os.chdir(filePath)
 	if os.path.exists(filePath):
 		codeFile = open(filePath,"r")
 		code = codeFile.read()
@@ -108,7 +107,7 @@ def dashboard():
 
 @app.route("/problems/<category>", methods=['GET'])
 def problems(category):
-	problem_data = getAllValues("select problem_name,p.problem_id,sum(case when Status != 'NULL' then 1 else 0 end) allsubs,sum(case when Status = 'AC' then 1 else 0 end) success from problem as p LEFT JOIN submission as s on s.problem_id=p.problem_id group by s.problem_id order by p.problem_id")
+	problem_data = getAllValues("select problem_name,p.problem_id,sum(case when Status != 'NULL' then 1 else 0 end) allsubs,sum(case when Status = 'AC' then 1 else 0 end) success from problem as p LEFT JOIN submission as s on s.problem_id=p.problem_id group by p.problem_id order by p.problem_id")
 	return render_template("problems.html", problem = problem_data)
 
 @app.route("/singleProblem/<problem_name>")

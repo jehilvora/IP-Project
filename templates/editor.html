@@ -18,9 +18,10 @@ int main()
 </div>
 
 <form method="post" action="/saveAndEvaluate/{{ pid }}" id="myForm">
-    <input name="code" type="text" hidden id="editortext">
     <input type="submit" value="Submit" id="submit">
 </form>
+
+<textarea style="display: none;" name="code" id="editortext" form="myForm"></textarea>
 
 
 <script src="{{ url_for('static',filename='src-noconflict/ace.js') }}" type="text/javascript" charset="utf-8"></script>
@@ -28,6 +29,7 @@ int main()
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/php");
+    editor.session.setNewLineMode("unix");
     document.getElementById("myForm").onsubmit = function(evt) {
       document.getElementById("editortext").value = editor.getValue();
   }
