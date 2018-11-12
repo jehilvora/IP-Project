@@ -11,6 +11,7 @@
     	<th>Problem Name</th>
     	<th>Status</th>
     	<th>No.Of Submissions</th>
+    	<th>Successful Submissions</th>
     	<th>Accuracy</th>
   	</tr>
   	{% for x in problem %}
@@ -22,6 +23,7 @@
     	<td><p>&#10060</p></td>
     	{% endif %}
     	<td>{{ x[2] }}</td>
+    	<td>{{ x[3] }}</td>
     	{% if x[2]!=0: %}
     	<td>{{ "%.2f" % ((x[3]*100)/x[2]) }}</td>
     	{% else: %}

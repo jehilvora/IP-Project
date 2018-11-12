@@ -1,0 +1,52 @@
+{% extends "dashboard.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/problems.css') }}">
+{% endblock %}
+
+{% block body %}
+{% if flag == "M": %}  	
+<h1>My Submissions</h1>
+	<table>
+  	<tr>
+    	<th>Register No.</th>
+    	<th>Status</th>
+    	<th>Submission Time</th>
+  	</tr>
+{% for subs in submissions: %}
+	<span style="cursor:pointer">
+	<tr onclick = "window.location='/editor/{{subs[3]}}?sub_id={{subs[0]}}'; ">
+		<td>{{ subs[2] }}</td>
+		{% if subs[1] == "AC": %}
+		<td><p>&#9989</p></td>
+		{% else: %}
+		<td><p>&#10060</p></td>
+		{% endif %}
+		<td>{{ subs[5] }}</td>
+	</tr>
+	</span>
+{% endfor %}
+{% endif %}
+{% if flag == "A": %}
+<h1>All Submissions</h1>
+	<table>
+  	<tr>
+    	<th>Register No.</th>
+    	<th>Status</th>
+    	<th>Submission Time</th>
+  	</tr>
+{% for subs in submissions: %}
+	<span style="cursor:pointer">
+	<tr onclick = "window.location='/editor/{{subs[3]}}?sub_id={{subs[0]}}'; ">
+		<td>{{ subs[2] }}</td>
+		{% if subs[1] == "AC": %}
+		<td><p>&#9989</p></td>
+		{% else: %}
+		<td><p>&#10060</p></td>
+		{% endif %}
+		<td>{{ subs[5] }}</td>
+	</tr>
+	</span>
+{% endfor %}
+{% endif %}
+{% endblock %}

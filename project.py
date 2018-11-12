@@ -2,6 +2,8 @@ from flask import Flask, render_template, redirect, url_for, request, session
 import os
 import subprocess
 import MySQLdb
+import time
+import datetime
 
 #App initialization
 app = Flask(__name__)
@@ -9,13 +11,15 @@ app = Flask(__name__)
 app.secret_key = os.urandom(12)
 
 #Database connection to database name 'online_judge'. Ensure user and password is same
-db = MySQLdb.connect('localhost', 'root', 'root@123', 'online_judge')
+db = MySQLdb.connect('localhost', 'root', 'root123', 'online_judge')
 
 @app.route("/saveAndEvaluate/<int:problem_id>",methods=['GET','POST'])
 def saveAndEvaluate(problem_id):
 	cursor = db.cursor()
 	code = request.form['code']
-	cursor.execute("insert into submission values(0,'C','WA','','%s',%d) " % (session['username'],problem_id))
+	ts=time.time()
+	sub_time=datetime.datetime.fromtimestamp(ts).strftime('%Y:%m:%d %H:%M:%S')
+	cursor.execute("insert into submission values(0,'C','WA','','%s',%d,'%s') " % (session['username'],problem_id,sub_time))
 	sub_id = getSingleValue("select max(sub_id) from submission")[0]
 	db.commit()
 	sub_id = int(sub_id)
@@ -123,13 +127,15 @@ def singleProblem(problem_name):
 
 @app.route("/singleProblem/<problem_name>/mySubmissions")
 def mySubmissions(problem_name):
-	submissions=getAllValues("select sub_id,Status,register_no,s.problem_id,problem_name from submission as s,problem as p where s.problem_id = p.problem_id and problem_name = '%s' and register_no = '%s'" % (problem_name,session['username']))
-	return render_template("mySubmissions.html", submissions = submissions , problem_name = problem_name)
+	submissions=getAllValues("select sub_id,Status,register_no,s.problem_id,problem_name,time from submission as s,problem as p where s.problem_id = p.problem_id and problem_name = '%s' and register_no = '%s' order by time desc" % (problem_name,session['username']))
+	flag="M"
+	return render_template("submissions.html", submissions = submissions , problem_name = problem_name , flag = flag)
 
 @app.route("/singleProblem/<problem_name>/allSubmissions")
 def allSubmissions(problem_name):
-	submissions=getAllValues("select sub_id,Status,register_no,s.problem_id,problem_name from submission as s,problem as p where s.problem_id = p.problem_id and problem_name = '%s'" % (problem_name))
-	return render_template("allSubmissions.html", submissions = submissions)
+	submissions=getAllValues("select sub_id,Status,register_no,s.problem_id,problem_name,time from submission as s,problem as p where s.problem_id = p.problem_id and problem_name = '%s' order by time desc" % (problem_name))
+	flag="A"
+	return render_template("submissions.html", submissions = submissions , flag = flag)
 
 @app.route("/logout", methods=['GET', 'POST'])
 def logout():
