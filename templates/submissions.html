@@ -1,6 +1,7 @@
 {% extends "dashboard.html" %}
 
 {% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/bootstrap.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/problems.css') }}">
 {% endblock %}
 
@@ -13,12 +14,25 @@
     	<th>Status</th>
     	<th>Submission Time</th>
   	</tr>
+
+{% if programStatus == "Compilation Error!": %}
+<div class="alert alert-warning">
+{% elif programStatus == "Wrong Answer!": %}
+<div class="alert alert-danger">
+{% elif programStatus == "Accepted!": %}
+<div class="alert alert-success">
+{% endif %}
+	<strong>{{ programStatus }}</strong>
+</div>
+
 {% for subs in submissions: %}
 	<span style="cursor:pointer">
 	<tr onclick = "window.location='/editor/{{subs[3]}}?sub_id={{subs[0]}}'; ">
 		<td>{{ subs[2] }}</td>
 		{% if subs[1] == "AC": %}
 		<td><p>&#9989</p></td>
+		{% elif subs[1] == "CE": %}
+		<td><p>&#10069</p></td>
 		{% else: %}
 		<td><p>&#10060</p></td>
 		{% endif %}
@@ -27,6 +41,7 @@
 	</span>
 {% endfor %}
 {% endif %}
+</table>
 {% if flag == "A": %}
 <h1>All Submissions</h1>
 	<table>
@@ -47,6 +62,7 @@
 		<td>{{ subs[5] }}</td>
 	</tr>
 	</span>
+</table>
 {% endfor %}
 {% endif %}
 {% endblock %}

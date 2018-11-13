@@ -28,7 +28,7 @@ int main()
 <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
-    editor.session.setMode("ace/mode/php");
+    editor.session.setMode("ace/mode/c_cpp");
     editor.session.setNewLineMode("unix");
     document.getElementById("myForm").onsubmit = function(evt) {
       document.getElementById("editortext").value = editor.getValue();

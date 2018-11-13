@@ -2,8 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request, session
 import os
 import subprocess
 import MySQLdb
-import time
-import datetime
+import matplotlib.pyplot as plt
 
 #App initialization
 app = Flask(__name__)
@@ -15,11 +14,10 @@ db = MySQLdb.connect('localhost', 'root', 'root123', 'online_judge')
 
 @app.route("/saveAndEvaluate/<int:problem_id>",methods=['GET','POST'])
 def saveAndEvaluate(problem_id):
+	programStatus = "Accepted!"
 	cursor = db.cursor()
 	code = request.form['code']
-	ts=time.time()
-	sub_time=datetime.datetime.fromtimestamp(ts).strftime('%Y:%m:%d %H:%M:%S')
-	cursor.execute("insert into submission values(0,'C','WA','','%s',%d,'%s') " % (session['username'],problem_id,sub_time))
+	cursor.execute("insert into submission values(0,'C','WA','','%s',%d,NOW()) " % (session['username'],problem_id))
 	sub_id = getSingleValue("select max(sub_id) from submission")[0]
 	db.commit()
 	sub_id = int(sub_id)
@@ -33,18 +31,20 @@ def saveAndEvaluate(problem_id):
 	status=subprocess.call("gcc %d.c -o %d" % (sub_id,sub_id),shell=True)
 	if status:
 		os.chdir("C:\IP-Project")
-		return "compilation error"
+		cursor.execute("update submission set Status='CE' where sub_id = %d" % sub_id)
+		programStatus = "Compilation Error!"
 	output=subprocess.check_output("%d.exe < C:\IP-Project\static\problems\%d.txt" % (sub_id,problem_id), shell=True)
 	os.chdir("C:\IP-Project\static\problems")
 	subprocess.call("gcc %d.c -o %d" % (problem_id,problem_id),shell=True)
 	expected_output=subprocess.check_output("%d.exe < C:\IP-Project\static\problems\%d.txt" % (problem_id, problem_id), shell=True)
 	if output!=expected_output:
 		os.chdir("C:\IP-Project")		
-		return "Wrong Output"	
+		programStatus = "Wrong Answer!"	
 	cursor.execute("update submission set Status='AC' where problem_id=%d and register_no='%s' and sub_id=%d" % (problem_id,session['username'],sub_id))
 	db.commit()
 	os.chdir("C:\IP-Project")
-	return "Successful Submission"
+	problem_name = getSingleValue("select problem_name from problem where problem_id = %d" % problem_id)[0]
+	return redirect(url_for('mySubmissions', problem_name = problem_name, programStatus = programStatus))
 
 @app.route("/editor/<int:problem_id>",methods=['GET','POST'])
 def editor(problem_id):
@@ -69,7 +69,15 @@ def home():
 
 @app.route("/profile", methods=['GET'])
 def profile():
-	return render_template("profile.html")
+	userInfo = getSingleValue("select * from users where register_no = '%s'" % session['username'])
+	stats = getSingleValue("select sum(case when Status='AC' then 1 else 0 end), sum(case when Status='WA' then 1 else 0 end), sum(case when Status='CE' then 1 else 0 end) from submission ")
+	
+	activity = getAllValues("select * from submission order by time desc limit 5")
+	plt.clf()
+	plt.pie(stats, labels=('AC','WA','CE'), autopct='%1.1f%%')
+	plt.title('Submission Statistics')
+	plt.savefig('C:\IP-Project\static\img\%s.png' % session['username'])
+	return render_template("profile.html", userInfo = userInfo, stats = stats, activity = activity)
 
 @app.route("/about", methods=['GET'])
 def about():
@@ -127,9 +135,10 @@ def singleProblem(problem_name):
 
 @app.route("/singleProblem/<problem_name>/mySubmissions")
 def mySubmissions(problem_name):
+	programStatus = request.args.get('programStatus')
 	submissions=getAllValues("select sub_id,Status,register_no,s.problem_id,problem_name,time from submission as s,problem as p where s.problem_id = p.problem_id and problem_name = '%s' and register_no = '%s' order by time desc" % (problem_name,session['username']))
 	flag="M"
-	return render_template("submissions.html", submissions = submissions , problem_name = problem_name , flag = flag)
+	return render_template("submissions.html", submissions = submissions , problem_name = problem_name , flag = flag, programStatus = programStatus)
 
 @app.route("/singleProblem/<problem_name>/allSubmissions")
 def allSubmissions(problem_name):
