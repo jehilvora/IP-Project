@@ -17,13 +17,17 @@
 
 {% if programStatus == "Compilation Error!": %}
 <div class="alert alert-warning">
-{% elif programStatus == "Wrong Answer!": %}
-<div class="alert alert-danger">
-{% elif programStatus == "Accepted!": %}
-<div class="alert alert-success">
-{% endif %}
 	<strong>{{ programStatus }}</strong>
 </div>
+{% elif programStatus == "Wrong Answer!": %}
+<div class="alert alert-danger">
+	<strong>{{ programStatus }}</strong>
+</div>
+{% elif programStatus == "Accepted!": %}
+<div class="alert alert-success">
+	<strong>{{ programStatus }}</strong>
+</div>
+{% endif %}
 
 {% for subs in submissions: %}
 	<span style="cursor:pointer">
@@ -40,8 +44,8 @@
 	</tr>
 	</span>
 {% endfor %}
-{% endif %}
 </table>
+{% endif %}
 {% if flag == "A": %}
 <h1>All Submissions</h1>
 	<table>
@@ -62,7 +66,7 @@
 		<td>{{ subs[5] }}</td>
 	</tr>
 	</span>
-</table>
 {% endfor %}
+</table>
 {% endif %}
 {% endblock %}

@@ -10,11 +10,12 @@ app = Flask(__name__)
 app.secret_key = os.urandom(12)
 
 #Database connection to database name 'online_judge'. Ensure user and password is same
-db = MySQLdb.connect('localhost', 'root', 'root123', 'online_judge')
+db = MySQLdb.connect('localhost', 'root', 'root@123', 'online_judge')
 
 @app.route("/saveAndEvaluate/<int:problem_id>",methods=['GET','POST'])
 def saveAndEvaluate(problem_id):
 	programStatus = "Accepted!"
+	problem_name = getSingleValue("select problem_name from problem where problem_id = %d" % problem_id)[0]
 	cursor = db.cursor()
 	code = request.form['code']
 	cursor.execute("insert into submission values(0,'C','WA','','%s',%d,NOW()) " % (session['username'],problem_id))
@@ -33,17 +34,17 @@ def saveAndEvaluate(problem_id):
 		os.chdir("C:\IP-Project")
 		cursor.execute("update submission set Status='CE' where sub_id = %d" % sub_id)
 		programStatus = "Compilation Error!"
-	output=subprocess.check_output("%d.exe < C:\IP-Project\static\problems\%d.txt" % (sub_id,problem_id), shell=True)
-	os.chdir("C:\IP-Project\static\problems")
-	subprocess.call("gcc %d.c -o %d" % (problem_id,problem_id),shell=True)
-	expected_output=subprocess.check_output("%d.exe < C:\IP-Project\static\problems\%d.txt" % (problem_id, problem_id), shell=True)
-	if output!=expected_output:
-		os.chdir("C:\IP-Project")		
-		programStatus = "Wrong Answer!"	
-	cursor.execute("update submission set Status='AC' where problem_id=%d and register_no='%s' and sub_id=%d" % (problem_id,session['username'],sub_id))
-	db.commit()
-	os.chdir("C:\IP-Project")
-	problem_name = getSingleValue("select problem_name from problem where problem_id = %d" % problem_id)[0]
+	else:
+		output=subprocess.check_output("%d.exe < C:\IP-Project\static\problems\%d.txt" % (sub_id,problem_id), shell=True)
+		os.chdir("C:\IP-Project\static\problems")
+		subprocess.call("gcc %d.c -o %d" % (problem_id,problem_id),shell=True)
+		expected_output=subprocess.check_output("%d.exe < C:\IP-Project\static\problems\%d.txt" % (problem_id, problem_id), shell=True)
+		if output!=expected_output:
+			os.chdir("C:\IP-Project")		
+			programStatus = "Wrong Answer!"	
+		cursor.execute("update submission set Status='AC' where problem_id=%d and register_no='%s' and sub_id=%d" % (problem_id,session['username'],sub_id))
+		db.commit()
+		os.chdir("C:\IP-Project")
 	return redirect(url_for('mySubmissions', problem_name = problem_name, programStatus = programStatus))
 
 @app.route("/editor/<int:problem_id>",methods=['GET','POST'])
