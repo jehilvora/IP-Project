@@ -7,16 +7,16 @@
 {% block body %}
 <h1>{{ problemInfo[4] }}</h1>
 <pre>
-	{{problemInfo[1]}}
+	{{ problemStatement }}
 </pre>
 <h3>Input:</h3>
 <pre>
-	{{problemInfo[2]}}
+	{{ testCases }}
 </pre> 
 <a class="singleProblem" href="/editor/{{problemInfo[0]}}">Solve</a>
-<a class="singleProblem" href="/singleProblem/{{problemInfo[4]}}/mySubmissions">My Submissions</a>
+<a class="singleProblem" href="/singleProblem/{{problemInfo[2]}}/mySubmissions">My Submissions</a>
 {% if status=="True": %}
-<a class="singleProblem" href="/singleProblem/{{problemInfo[4]}}/allSubmissions">All Submissions</a>
+<a class="singleProblem" href="/singleProblem/{{problemInfo[2]}}/allSubmissions">All Submissions</a>
 {% endif %}	
 {% endblock %}
 	}

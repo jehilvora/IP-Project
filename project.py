@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(12)
 
 #Database connection to database name 'online_judge'. Ensure user and password is same
-db = MySQLdb.connect('localhost', 'root', 'root@123', 'online_judge')
+db = MySQLdb.connect('localhost', 'root', 'root123', 'online_judge')
 
 @app.route("/saveAndEvaluate/<int:problem_id>",methods=['GET','POST'])
 def saveAndEvaluate(problem_id):
@@ -18,7 +18,7 @@ def saveAndEvaluate(problem_id):
 	problem_name = getSingleValue("select problem_name from problem where problem_id = %d" % problem_id)[0]
 	cursor = db.cursor()
 	code = request.form['code']
-	cursor.execute("insert into submission values(0,'C','WA','','%s',%d,NOW()) " % (session['username'],problem_id))
+	cursor.execute("insert into submission values(0,'C','WA','%s',%d,NOW()) " % (session['username'],problem_id))
 	sub_id = getSingleValue("select max(sub_id) from submission")[0]
 	db.commit()
 	sub_id = int(sub_id)
@@ -72,7 +72,6 @@ def home():
 def profile():
 	userInfo = getSingleValue("select * from users where register_no = '%s'" % session['username'])
 	stats = getSingleValue("select sum(case when Status='AC' then 1 else 0 end), sum(case when Status='WA' then 1 else 0 end), sum(case when Status='CE' then 1 else 0 end) from submission ")
-	
 	activity = getAllValues("select * from submission order by time desc limit 5")
 	plt.clf()
 	plt.pie(stats, labels=('AC','WA','CE'), autopct='%1.1f%%')
@@ -89,6 +88,9 @@ def signUpHandler():
 	#Add a new User to the database. Currently storing passwords as plain-text. Will substitute for sha256.
 	userName = request.form['uname']
 	psw = request.form['psw']
+	register_no = request.form['regno']
+	email = request.form['email']
+	desc = request.form['desc']
 	cursor = db.cursor()
 	# Retrieve all users
 	userData = getAllValues("select register_no from users")
@@ -96,7 +98,7 @@ def signUpHandler():
 	messages = None
 	# Check for new user in current users
 	if userName not in userData:
-		cursor.execute("insert into users values ('%s','%s')" % (userName, psw))
+		cursor.execute("insert into users values ('%s','%s','%s','%s','%s')" % (register_no, psw, email, userName, desc))
 		db.commit()
 	else:
 		messages = "User already exists"
@@ -104,11 +106,11 @@ def signUpHandler():
 
 @app.route('/loginHandler', methods=['GET', 'POST'])
 def loginHandler():
-	userName = request.form['uname']
+	register_no = request.form['regno']
 	psw = request.form['psw']
-	reqPsw = getSingleValue("select password from users where register_no = '%s'" % userName)
+	reqPsw = getSingleValue("select password from users where register_no = '%s'" % register_no)
 	if reqPsw != None and psw == reqPsw[0]:
-			session['username'] = userName
+			session['username'] = register_no
 			session['logged_in'] = True
 			return redirect(url_for('dashboard'))
 	else:
@@ -121,7 +123,8 @@ def dashboard():
 @app.route("/problems/<category>", methods=['GET'])
 def problems(category):
 	problem_data = getAllValues("select problem_name,p.problem_id,sum(case when Status != 'NULL' then 1 else 0 end) allsubs,sum(case when Status = 'AC' then 1 else 0 end) success from problem as p LEFT JOIN submission as s on s.problem_id=p.problem_id group by p.problem_id order by p.problem_id")
-	return render_template("problems.html", problem = problem_data)
+	tags = [x[0] for x in getAllValues("select * from problem_tags")]
+	return render_template("problems.html", problem = problem_data, tags = tags)
 
 @app.route("/singleProblem/<problem_name>")
 def singleProblem(problem_name):

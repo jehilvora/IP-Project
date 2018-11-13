@@ -3,9 +3,18 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/problems.css') }}">
 {% endblock %}
 {% block body %}
-<!--	{% for problem in problems: %}
-	<a href="/singleProblem/{{problem[0]}}"><li>{{problem[0]}}</li></a>
-	{% endfor %} -->
+
+{% if request.path == "/problems/placement" %}
+<form id="searchForm">
+  <select name="tag" form="searchForm">
+  {% for tag in tags: %}
+  <option value="{{ tag }}">tag</option>
+  {% endfor %}
+</select>
+  <input type="submit" value="Search">
+</form>
+{% endif %}
+
 	<table>
   	<tr>
     	<th>Problem Name</th>
