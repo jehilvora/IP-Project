@@ -8,7 +8,7 @@
 
 <h2>IP Project</h2>
 {% if request.args.get('sign_up') == "1" %}
-<form method="post" action="/signUpHandler">
+<form id="signUpForm" method="post" action="/signUpHandler">
 {% else %}
 <form method="post" action="/loginHandler">
 {%endif%}
@@ -17,8 +17,8 @@
   </div>-->
 
   <div class="container">
-    <label for="uname"><b>Register Number</b></label>
-    <input type="text" placeholder="Enter Username" name="uname" required>
+    <label for="regno"><b>Register Number</b></label>
+    <input type="text" placeholder="Enter Username" name="regno" required>
 
     <label for="psw"><b>Password</b></label>
     <input type="password" placeholder="Enter Password" name="psw" required>
@@ -27,18 +27,20 @@
       <p style="color: red;">{{messages}}</p>
     </div>
     {%endif%}
+
     {% if request.args.get('sign_up') == "1" %}
+    <label for="email"><b>Email ID</b></label>
+    <input type="email" placeholder="Enter Email ID" name="email" required>
+    <label for="uname"><b>Username</b></label>
+    <input type="text" placeholder="Enter Username" name="uname" required>
+    <textarea name="desc" form="signUpForm" required></textarea>
     <button type="submit">Create new</button>
     {% else %}
     <button type="submit">Login</button>
-    <!--<label>
-      <input type="checkbox" checked="checked" name="remember"> Remember me
-    </label>-->
   </div>
 
   <div class="container" style="background-color:#f1f1f1">
     <span class="signupbtn"><a style="text-decoration: none; color: white; font-family: Arial, sans-serif;" href="/?sign_up=1">Sign Up</a></span>
-    <span class="psw">Forgot <a href="#">password?</a></span>
   </div>
   {%endif%}
 </form>

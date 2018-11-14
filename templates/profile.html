@@ -17,7 +17,7 @@
         <div class="useravatar">
             <img alt="" src="{{ url_for('static',filename='img/profile.png') }}">
         </div>
-        <div class="card-info"> <span class="card-title">{{ session['username'] }}</span>
+        <div class="card-info"> <span class="card-title">{{ userInfo[3] }}</span>
         </div>
     </div>
     <div class="btn-pref btn-group btn-group-justified btn-group-lg" role="group" aria-label="...">
@@ -43,7 +43,10 @@
         <div class="tab-pane fade in active" id="tab1">
           <h3>
             <pre>
-                Name : {{ userInfo[0] }}
+                Username : {{ userInfo[3] }}
+                Email : {{ userInfo[2] }}
+                Register Number : {{ userInfo[0] }}
+                Description : {{ userInfo[4] }}
             </pre>
           </h3>
         </div>
