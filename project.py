@@ -131,11 +131,17 @@ def singleProblem(problem_name):
 	# Get information for single problem
 	problemInfo = getSingleValue("select * from problem where problem_name = '%s'" % problem_name)
 	get_status = getSingleValue("select count(*) from submission as s,problem as p where problem_name = '%s' and p.problem_id=s.problem_id and Status='AC' and register_no='%s' " % (problem_name,session['username']))
+	description=""
+	filePath="./static/problemStatement/%d.txt" % (problemInfo[0])
+	if os.path.exists(filePath):
+		descriptionFile = open(filePath,"r")
+		description = descriptionFile.read()
+		descriptionFile.close()
 	if get_status[0]>0:
 		status="True"
 	else:
 		status="False"
-	return render_template("singleProblem.html", problemInfo = problemInfo , status = status)
+	return render_template("singleProblem.html", problemInfo = problemInfo , status = status , problemStatement = description)
 
 @app.route("/singleProblem/<problem_name>/mySubmissions")
 def mySubmissions(problem_name):
