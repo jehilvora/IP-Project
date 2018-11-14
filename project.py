@@ -18,7 +18,7 @@ def saveAndEvaluate(problem_id):
 	problem_name = getSingleValue("select problem_name from problem where problem_id = %d" % problem_id)[0]
 	cursor = db.cursor()
 	code = request.form['code']
-	cursor.execute("insert into submission values(0,'C','WA','','%s',%d,NOW()) " % (session['username'],problem_id))
+	cursor.execute("insert into submission values(0,'C','WA','%s',%d,NOW()) " % (session['username'],problem_id))
 	sub_id = getSingleValue("select max(sub_id) from submission")[0]
 	db.commit()
 	sub_id = int(sub_id)
