@@ -5,12 +5,12 @@
 {% block body %}
 
 {% if request.path == "/problems/placement" %}
-<form id="searchForm">
+<form style="text-align: center;" id="searchForm">
   <select name="tag" form="searchForm">
   {% for tag in tags: %}
   <option value="{{ tag }}">tag</option>
   {% endfor %}
-</select>
+  </select>
   <input type="submit" value="Search">
 </form>
 {% endif %}
