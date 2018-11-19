@@ -42,9 +42,10 @@ def saveAndEvaluate(problem_id):
 		if output!=expected_output:
 			os.chdir("C:\IP-Project")		
 			programStatus = "Wrong Answer!"	
-		cursor.execute("update submission set Status='AC' where problem_id=%d and register_no='%s' and sub_id=%d" % (problem_id,session['username'],sub_id))
+		else:
+			cursor.execute("update submission set Status='AC' where problem_id=%d and register_no='%s' and sub_id=%d" % (problem_id,session['username'],sub_id))
+			os.chdir("C:\IP-Project")
 		db.commit()
-		os.chdir("C:\IP-Project")
 	return redirect(url_for('mySubmissions', problem_name = problem_name, programStatus = programStatus))
 
 @app.route("/editor/<int:problem_id>",methods=['GET','POST'])
