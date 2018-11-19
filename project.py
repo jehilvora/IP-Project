@@ -72,12 +72,14 @@ def home():
 @app.route("/profile", methods=['GET'])
 def profile():
 	userInfo = getSingleValue("select * from users where register_no = '%s'" % session['username'])
-	stats = getSingleValue("select sum(case when Status='AC' then 1 else 0 end), sum(case when Status='WA' then 1 else 0 end), sum(case when Status='CE' then 1 else 0 end) from submission ")
-	activity = getAllValues("select * from submission order by time desc limit 5")
-	plt.clf()
-	plt.pie(stats, labels=('AC','WA','CE'), autopct='%1.1f%%')
-	plt.title('Submission Statistics')
-	plt.savefig('C:\IP-Project\static\img\%s.png' % session['username'])
+	stats = getSingleValue("select sum(case when Status='AC' then 1 else 0 end), sum(case when Status='WA' then 1 else 0 end), sum(case when Status='CE' then 1 else 0 end) from submission where register_no = '%s'" % session['username'])
+	activity = getAllValues("select problem_name,Language,time,Status from submission s, problem p where p.problem_id=s.problem_id and register_no = '%s' order by time desc limit 5" % session['username'])
+	stats = [x if x != None else 0 for x in stats]
+	if stats != None:
+		plt.clf()
+		plt.pie(stats, labels=('AC','WA','CE'), autopct='%1.1f%%')
+		plt.title('Submission Statistics')
+		plt.savefig('C:\IP-Project\static\img\%s.png' % session['username'])
 	return render_template("profile.html", userInfo = userInfo, stats = stats, activity = activity)
 
 @app.route("/about", methods=['GET'])
@@ -123,7 +125,8 @@ def dashboard():
 
 @app.route("/problems/<category>", methods=['GET'])
 def problems(category):
-	problem_data = getAllValues("select problem_name,p.problem_id,sum(case when Status != 'NULL' then 1 else 0 end) allsubs,sum(case when Status = 'AC' then 1 else 0 end) success from problem as p LEFT JOIN submission as s on s.problem_id=p.problem_id group by p.problem_id order by p.problem_id")
+	problem_data = getAllValues("select problem_name,p.problem_id,sum(case when Status != 'NULL' then 1 else 0 end) allsubs,sum(case when Status = 'AC' then 1 else 0 end) success from problem as p LEFT JOIN submission as s on s.problem_id=p.problem_id where p.category_name='%s' group by p.problem_id order by p.problem_id" % category)
+	print(problem_data)
 	tags = [x[0] for x in getAllValues("select * from problem_tags")]
 	return render_template("problems.html", problem = problem_data, tags = tags)
 
