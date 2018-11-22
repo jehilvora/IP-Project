@@ -1,1 +1,6 @@
 problem_id, category_name, problem_name
+"1","Data Structures","Tower of Hanoi"
+"2","Data Structures","Infix to Postfix"
+"3","Data Structures","Insertion Sort"
+"4","Data Structures","Singly Linked List"
+"5","Data Structures","Binary Search Tree"

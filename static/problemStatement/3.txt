@@ -1,1 +1,0 @@
-Write a program to print a message after accepting an input string.
