@@ -1,1 +1,1 @@
-Write a program to print "Hello World!".
+Program to find mean,variance and standard deviation. 

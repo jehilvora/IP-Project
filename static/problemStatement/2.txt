@@ -1,1 +1,1 @@
-Write a program to print a half triangle of size 5 using *.
+Program to convert given binary number to decimal. 
