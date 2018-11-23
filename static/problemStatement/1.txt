@@ -1,1 +1,47 @@
+<<<<<<< HEAD
 Program to find mean,variance and standard deviation. 
+=======
+Write a program to implement Tower of Hanoi.
+
+<h3>Input Format</h3>
+<pre><b>
+	The first line of input specifies the number of test cases, t.
+	The next line of specifies the number of disks, n.
+</b></pre>
+
+<h3>Output Format</h3>
+<pre><b>
+	The output consists of each move on a single line.
+	Each line consists of an integer and two characters specifying the current and final position.
+	Positons are given by three pegs.
+	First Peg - Source[S]
+	Middle Peg - Temporary[T]
+	Last Peg - Destination[D]
+	First the number of the disk to be moved.
+	Next character is the present location.
+	Last character is the final location.
+	Each test case is seperated by a new line.
+</b></pre>
+
+<h3>Example Input</h3>
+<pre><b>
+	2
+	2
+	3
+</b></pre>
+
+<h3>Example Output</h3>
+<pre><b>
+	1 S T
+	2 S D
+	1 T D
+
+	1 S D
+	2 S T
+	1 D T
+	3 S D
+	1 T S
+	2 T D
+	1 S D
+</b></pre>
+>>>>>>> a31856866d97c0782ac69c9c3c38287607a974be

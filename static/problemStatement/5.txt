@@ -1,1 +1,30 @@
+<<<<<<< HEAD
 Program to find the sum of squares. 
+=======
+Write a program to implement a Binary Search Tree.
+
+<h3>Input Format</h3>
+<pre>
+	The first line of input specifies the number of elements, n.
+	The next line contains n space seperated integers that are to be inserted into the BST.
+	The tree is assumed to be empty initially.
+</pre>
+
+<h3>Output Format</h3>
+<pre>
+	Output consists of three lines with the preorder, inorder and postorder traversals of the tree.
+</pre>
+
+<h3>Example Input</h3>
+<pre>
+	10
+	12 57 62 82 47 44 92 231 335 37
+</pre>
+
+<h3>Example Output</h3>
+<pre>
+	12 57 47 44 37 62 82 92 231 335
+	12 37 44 47 57 62 82 92 231 335
+	37 44 47 335 231 92 82 62 57 12
+</pre>
+>>>>>>> a31856866d97c0782ac69c9c3c38287607a974be

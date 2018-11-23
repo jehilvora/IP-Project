@@ -1,1 +1,32 @@
+<<<<<<< HEAD
 Program to convert given binary number to decimal. 
+=======
+Write a program to convert infix to postfix.
+
+<h3>Input Format</h3>
+<pre>
+	The first line of input specifies the number of test cases, t.
+	The next t lines consists of infix expressions.
+	Variables are from [a-z] and valid operators are [+,*,-,/,^,(,)]
+</pre>
+
+<h3>Output Format</h3>
+<pre>
+	Print the postfix form of each expression on a single line.
+</pre>
+
+<h3>Example Input</h3>
+<pre>
+	3
+	(a+b)
+	a*b+(c*d)
+	a*(b+c)
+</pre>
+
+<h3>Example Output</h3>
+<pre>
+	ab+
+	ab*cd*+
+	abc+*
+</pre>
+>>>>>>> a31856866d97c0782ac69c9c3c38287607a974be
