@@ -1,13 +1,13 @@
 Write a program to implement Tower of Hanoi.
 
 <h3>Input Format</h3>
-<pre>
+<pre><b>
 	The first line of input specifies the number of test cases, t.
 	The next line of specifies the number of disks, n.
-</pre>
+</b></pre>
 
 <h3>Output Format</h3>
-<pre>
+<pre><b>
 	The output consists of each move on a single line.
 	Each line consists of an integer and two characters specifying the current and final position.
 	Positons are given by three pegs.
@@ -18,17 +18,17 @@ Write a program to implement Tower of Hanoi.
 	Next character is the present location.
 	Last character is the final location.
 	Each test case is seperated by a new line.
-</pre>
+</b></pre>
 
 <h3>Example Input</h3>
-<pre>
+<pre><b>
 	2
 	2
 	3
-</pre>
+</b></pre>
 
 <h3>Example Output</h3>
-<pre>
+<pre><b>
 	1 S T
 	2 S D
 	1 T D
@@ -40,4 +40,4 @@ Write a program to implement Tower of Hanoi.
 	1 T S
 	2 T D
 	1 S D
-</pre>
+</b></pre>

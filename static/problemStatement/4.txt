@@ -1,0 +1,46 @@
+Write a program to implement a singly linked list.
+
+<h3>Input Format</h3>
+<pre>
+	The first line of input specifies the number of operations, q.
+	The list is assumed to be empty initially.
+	Operation formats:
+
+	Inserts are of the form
+	1 <position to insert element> <element to be inserted>
+
+	Deletions are of the form
+	2 <element at position to be deleted>
+
+	Display
+	3
+
+	Exit
+	4
+</pre>
+
+<h3>Output Format</h3>
+<pre>
+	No output is expected for an insert or exit.
+	After a delete, the deleted element is to be displayed on a single line.
+	A display operation must display the list as space seperated integers starting from the head.
+</pre>
+
+<h3>Example Input</h3>
+<pre>
+	7
+	1 0 10
+	1 1 20
+	3
+	2 0
+	1 0 30
+	3
+	4
+</pre>
+
+<h3>Example Output</h3>
+<pre>
+	10 20
+	10
+	30 20
+</pre>

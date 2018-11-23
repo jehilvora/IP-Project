@@ -22,7 +22,7 @@ def saveAndEvaluate(problem_id):
 	sub_id = getSingleValue("select max(sub_id) from submission")[0]
 	db.commit()
 	sub_id = int(sub_id)
-	filePath="./static/submissions/%s" % (session['username'])
+	filePath="C:/IP-Project/static/submissions/%s" % (session['username'])
 	if not os.path.exists(filePath):
 		os.makedirs(filePath)
 	codeFile = open(filePath+'/%d.c' % ((sub_id)),"w+")
@@ -50,7 +50,7 @@ def saveAndEvaluate(problem_id):
 @app.route("/editor/<int:problem_id>",methods=['GET','POST'])
 def editor(problem_id):
 	sub_id = request.args.get('sub_id')
-	filePath="./static/submissions/%s/%s.c" % (session['username'],sub_id)
+	filePath="C:/IP-Project/static/submissions/%s/%s.c" % (session['username'],sub_id)
 	code = ""
 	if os.path.exists(filePath):
 		codeFile = open(filePath,"r")
@@ -125,7 +125,6 @@ def dashboard():
 @app.route("/problems/<category>", methods=['GET'])
 def problems(category):
 	problem_data = getAllValues("select problem_name,p.problem_id,sum(case when Status != 'NULL' then 1 else 0 end) allsubs,sum(case when Status = 'AC' then 1 else 0 end) success from problem as p LEFT JOIN submission as s on s.problem_id=p.problem_id where p.category_name='%s' group by p.problem_id order by p.problem_id" % category)
-	print(problem_data)
 	tags = [x[0] for x in getAllValues("select * from problem_tags")]
 	return render_template("problems.html", problem = problem_data, tags = tags)
 
@@ -135,10 +134,11 @@ def singleProblem(problem_name):
 	problemInfo = getSingleValue("select * from problem where problem_name = '%s'" % problem_name)
 	get_status = getSingleValue("select count(*) from submission as s,problem as p where problem_name = '%s' and p.problem_id=s.problem_id and Status='AC' and register_no='%s' " % (problem_name,session['username']))
 	description=""
-	filePath="./static/problemStatement/%d.txt" % (problemInfo[0])
+	filePath="C:/IP-Project/static/problemStatement/%d.txt" % (problemInfo[0])
 	if os.path.exists(filePath):
 		descriptionFile = open(filePath,"r")
 		description = descriptionFile.read()
+		print("desc"+description)
 		descriptionFile.close()
 	if get_status[0]>0:
 		status="True"
