@@ -1,22 +1,4 @@
 #include<stdio.h>
-<<<<<<< HEAD
-
-int main()
-{
-	int n, num, sum=0, i;
-	scanf("%d", &n);
-	for(i=0; i<n; i++) 	
-	{
-		scanf("%d", &num);
-		sum = sum + num*num; 
-	}
-
-	//shortcut method use direct formula sum(n*n) = (n*(n+1)*(2*n+1))/6 
-	printf("Sum of squares of the given numbers is %d\n", sum);
-	return 0;  
-}
-
-=======
 #include<stdlib.h>
 
 struct node
@@ -95,4 +77,4 @@ void postorder(NODE root6)
 		printf("%d ",root6->data);
 	}
 }
->>>>>>> a31856866d97c0782ac69c9c3c38287607a974be
+

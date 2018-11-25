@@ -1,0 +1,1 @@
+Program to convert given binary number to decimal. 

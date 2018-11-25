@@ -123,6 +123,12 @@ def loginHandler():
 def dashboard():
 	return render_template("dashboard.html")
 
+@app.route("/lab", methods = ['GET' , 'POST'])
+def lab():
+	categories = getAllValues("select name from category")
+	return render_template('lab.html', categories = categories)
+
+
 @app.route("/problems/<category>", methods=['GET'])
 def problems(category):
 	problem_data = getAllValues("select problem_name,p.problem_id,sum(case when Status != 'NULL' then 1 else 0 end) allsubs,sum(case when Status = 'AC' then 1 else 0 end) success from problem as p LEFT JOIN submission as s on s.problem_id=p.problem_id where p.category_name='%s' group by p.problem_id order by p.problem_id" % category)

@@ -1,0 +1,15 @@
+{% extends "dashboard.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/lab.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<ul>
+	{% for cat in categories: %}
+	<a href="/problems/{{ cat[0] }}"><!-- <li>{{ cat[0]  }}</li> --><img src="/../static/img/{{ cat[0] }}.png" style="float: left; width: 40%; margin-right: 1%; margin-bottom: 0.5em; border-radius: 50px; " height="500px" width="500px" border="5"  ></a>
+	{% endfor %}
+</ul>
+
+{% endblock %}

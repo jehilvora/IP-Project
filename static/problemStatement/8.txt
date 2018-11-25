@@ -1,0 +1,1 @@
+Program to find smallest and largest number in the array.

@@ -4,3 +4,8 @@ problem_id, category_name, problem_name
 "3","Data Structures","Insertion Sort"
 "4","Data Structures","Singly Linked List"
 "5","Data Structures","Binary Search Tree"
+"6","C Lab","Calculating Mean"
+"7","C Lab","Binary to Decimal"
+"8","C Lab","Min and Max"
+"9","C Lab","Concatenation of 2 Strings"
+"10","C Lab","Sum of Squares"
