@@ -9,3 +9,8 @@ problem_id, category_name, problem_name
 "8","C Lab","Min and Max"
 "9","C Lab","Concatenation of 2 Strings"
 "10","C Lab","Sum of Squares"
+"11","Placement","ATM Pin"
+"12","Placement","Optimize Code"
+"13","Placement","Rakesh's Journey"
+"14","Placement","Lovely Sentence"
+"15","Placement","Minimize Array"

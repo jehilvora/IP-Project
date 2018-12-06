@@ -29,7 +29,7 @@ def saveAndEvaluate(problem_id):
 	codeFile.write(code)
 	codeFile.close()
 	os.chdir(filePath)
-	status=subprocess.call("gcc %d.c -o %d" % (sub_id,sub_id),shell=True)
+	status=subprocess.call("g++ %d.c -o %d" % (sub_id,sub_id),shell=True)
 	if status:
 		os.chdir("C:\IP-Project")
 		cursor.execute("update submission set Status='CE' where sub_id = %d" % sub_id)
@@ -37,7 +37,7 @@ def saveAndEvaluate(problem_id):
 	else:
 		output=subprocess.check_output("%d.exe < C:\IP-Project\static\problems\%d.txt" % (sub_id,problem_id), shell=True)
 		os.chdir("C:\IP-Project\static\problems")
-		subprocess.call("gcc %d.c -o %d" % (problem_id,problem_id),shell=True)
+		subprocess.call("g++ %d.c -o %d" % (problem_id,problem_id),shell=True)
 		expected_output=subprocess.check_output("%d.exe < C:\IP-Project\static\problems\%d.txt" % (problem_id, problem_id), shell=True)
 		if output!=expected_output:
 			os.chdir("C:\IP-Project")		
@@ -121,6 +121,7 @@ def loginHandler():
 
 @app.route("/dashboard", methods=['GET'])
 def dashboard():
+	generateSlideShowImages()
 	return render_template("dashboard.html")
 
 @app.route("/lab", methods = ['GET' , 'POST'])
@@ -131,7 +132,11 @@ def lab():
 
 @app.route("/problems/<category>", methods=['GET'])
 def problems(category):
-	problem_data = getAllValues("select problem_name,p.problem_id,sum(case when Status != 'NULL' then 1 else 0 end) allsubs,sum(case when Status = 'AC' then 1 else 0 end) success from problem as p LEFT JOIN submission as s on s.problem_id=p.problem_id where p.category_name='%s' group by p.problem_id order by p.problem_id" % category)
+	tag_filter = request.args.get('tag')
+	if tag_filter != None and tag_filter != "None":
+		problem_data = getAllValues("select problem_name,p.problem_id,sum(case when Status != 'NULL' and register_no = '%s' then 1 else 0 end) allsubs,sum(case when Status = 'AC' and register_no = '%s' then 1 else 0 end) success from problem as p LEFT JOIN submission as s on s.problem_id=p.problem_id where p.category_name='%s' and p.problem_id in (select problem_id from problem_tags where Tags='%s') group by p.problem_id order by p.problem_id" % (session['username'],session['username'],category,tag_filter))
+	else:
+		problem_data = getAllValues("select problem_name,p.problem_id,sum(case when Status != 'NULL' and register_no = '%s' then 1 else 0 end) allsubs,sum(case when Status = 'AC' and register_no = '%s' then 1 else 0 end) success from problem as p LEFT JOIN submission as s on s.problem_id=p.problem_id where p.category_name='%s' group by p.problem_id order by p.problem_id" % (session['username'],session['username'],category))
 	tags = [x[0] for x in getAllValues("select * from problem_tags")]
 	return render_template("problems.html", problem = problem_data, tags = tags)
 
@@ -171,6 +176,25 @@ def logout():
 	#set logged_in to false to remove user from sessioname
 	session.clear()
 	return redirect(url_for('home'))
+
+def generateSlideShowImages():
+	plt.clf()
+	data = getAllValues("select register_no,count(*) from submission where Status='AC' group by register_no")
+	users = [x[0] for x in data]
+	color = ['red' if x == session['username'] else 'blue' for x in users]
+	submitted = [x[1] for x in data]
+	plt.bar(list(range(len(data))),submitted,color=color)
+	plt.title("User Submissions")
+	plt.xticks(list(range(len(data))),users)
+	plt.savefig("C:/IP-Project/static/img/user_ranks.png")
+	plt.clf()
+	data = getAllValues("select Tags,count(*) from problem_tags group by Tags")
+	tags = [x[0] for x in data]
+	count = [x[1] for x in data]
+	plt.pie(count, labels = tags, autopct="%1.1f%%")
+	plt.title("Placement Problem Tag Distributions")
+	plt.savefig("C:/IP-Project/static/img/problem_tag_graph.png")
+
 
 
 def getSingleValue(query):
