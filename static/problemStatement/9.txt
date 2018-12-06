@@ -1,1 +1,23 @@
-Program to concatenate strings. 
+Write a program to concatenate 2 strings. 
+
+<h3>Input Format</h3>
+<pre>
+	The first line of input specifies the number of test cases, t.
+	Each test case consists of 2 space sepearted strings.
+</pre>
+
+<h3>Output Format</h3>
+<pre>
+	Print the concatenated string for each test case on a single line.
+</pre>
+
+<h3>Example Input</h3>
+<pre>
+	1
+	Hello World
+</pre>
+
+<h3>Example Output</h3>
+<pre>
+	HelloWorld
+</pre>

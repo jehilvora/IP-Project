@@ -1,1 +1,27 @@
-Program to convert given binary number to decimal. 
+Write a program to convert given binary number to decimal.
+
+<h3>Input Format</h3>
+<pre>
+	The first line of input specifies the number of test cases, t.
+	Each test case consists of n space seperated strings that represent binary numbers.
+</pre>
+
+<h3>Output Format</h3>
+<pre>
+	Print the decimal equivalent for each test case on a single line.
+</pre>
+
+<h3>Example Input</h3>
+<pre>
+	3
+	101
+	11
+	1101
+</pre>
+
+<h3>Example Output</h3>
+<pre>
+	5
+	3
+	13
+</pre>  

@@ -1,1 +1,27 @@
-Program to find smallest and largest number in the array.
+Write a program to find smallest and largest number in the array.
+
+<h3>Input Format</h3>
+<pre>
+	The first line of input specifies the number of test cases, t.
+	Each test case consists of the length of the array, n, followed by n integers.
+</pre>
+
+<h3>Output Format</h3>
+<pre>
+	Print the smallest and largest elements respectively for each test case on a single line.
+</pre>
+
+<h3>Example Input</h3>
+<pre>
+	2
+	4
+	5 1 7 32
+	3
+	13 121 12
+</pre>
+
+<h3>Example Output</h3>
+<pre>
+	1 32 
+	12 121
+</pre>

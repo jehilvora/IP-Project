@@ -1,1 +1,24 @@
-Program to find the sum of squares. 
+Write a program to find the sum of squares. 
+
+<h3>Input Format</h3>
+<pre>
+	The first line of input specifies the number of test cases, t.
+	Each test case consists of the length of the array, n, followed by n integers.
+</pre>
+
+<h3>Output Format</h3>
+<pre>
+	Print the sum of squares of the n numbers for each test case on a single line.
+</pre>
+
+<h3>Example Input</h3>
+<pre>
+	1
+	4
+	3 6 5 2
+</pre>
+
+<h3>Example Output</h3>
+<pre>
+	74
+</pre>
